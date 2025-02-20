@@ -1,0 +1,83 @@
+package main
+
+import (
+	"fmt"
+	"os"
+	"strconv"
+)
+
+func main() {
+	// Check for exactly 3 arguments
+	if len(os.Args) != 4 {
+		return
+	}
+
+	// Parse the arguments
+	arg1 := os.Args[1]
+	operator := os.Args[2]
+	arg2 := os.Args[3]
+
+	// Convert values to integers
+	num1, err1 := strconv.Atoi(arg1)
+	num2, err2 := strconv.Atoi(arg2)
+
+	// Return if conversion fails
+	if err1 != nil || err2 != nil {
+		return
+	}
+
+	// Handle operations based on the operator
+	switch operator {
+	case "+":
+		// Check for overflow
+		if !isSafeAddition(num1, num2) {
+			return
+		}
+		fmt.Println(num1 + num2)
+	case "-":
+		// Check for overflow
+		if !isSafeSubtraction(num1, num2) {
+			return
+		}
+		fmt.Println(num1 - num2)
+	case "*":
+		// Check for overflow
+		if !isSafeMultiplication(num1, num2) {
+			return
+		}
+		fmt.Println(num1 * num2)
+	case "/":
+		if num2 == 0 {
+			fmt.Println("No division by 0")
+			return
+		}
+		fmt.Println(num1 / num2)
+	case "%":
+		if num2 == 0 {
+			fmt.Println("No modulo by 0")
+			return
+		}
+		fmt.Println(num1 % num2)
+	default:
+		// Invalid operator
+		return
+	}
+}
+
+// Helper function to check safe addition
+func isSafeAddition(a, b int) bool {
+	result := int64(a) + int64(b)
+	return result <= int64(^uint(0)>>1) && result >= int64(-1<<(strconv.IntSize-1))
+}
+
+// Helper function to check safe subtraction
+func isSafeSubtraction(a, b int) bool {
+	result := int64(a) - int64(b)
+	return result <= int64(^uint(0)>>1) && result >= int64(-1<<(strconv.IntSize-1))
+}
+
+// Helper function to check safe multiplication
+func isSafeMultiplication(a, b int) bool {
+	result := int64(a) * int64(b)
+	return result <= int64(^uint(0)>>1) && result >= int64(-1<<(strconv.IntSize-1))
+}
