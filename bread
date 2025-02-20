@@ -1,0 +1,23 @@
+package piscine
+
+func LoafOfBread(str string) string {
+	if len(str) < 5 {
+		return "Invalid Output\n"
+	}
+
+	var result string
+	counter := 0
+
+	for i := 0; i < len(str); i++ {
+		if str[i] != ' ' { // Skip spaces
+			result += string(str[i])
+			counter++
+			if counter == 5 { // Skip the next character after collecting 5
+				i++
+				counter = 0
+			}
+		}
+	}
+
+	return result + "\n"
+}
